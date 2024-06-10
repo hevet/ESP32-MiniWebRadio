@@ -1006,9 +1006,9 @@ function setstation () { // Radio: button play - Enter a streamURL here....
 
 function setSlider (elmnt, value) {
     console.log("setSlider", elmnt, value)
-    if (elmnt === 'LowPass' ) { v = Math.trunc((40 + parseInt(value, 10)) /3); slider_LP_set(v); }
-    if (elmnt === 'BandPass') { v = Math.trunc((40 + parseInt(value, 10)) /3); slider_BP_set(v); }
-    if (elmnt === 'HighPass') { v = Math.trunc((40 + parseInt(value, 10)) /3); slider_HP_set(v); }
+    if (elmnt === 'LowPass' ) { v = Math.trunc((33 + parseInt(value, 10)) /3); slider_LP_set(v); }
+    if (elmnt === 'BandPass') { v = Math.trunc((33 + parseInt(value, 10)) /3); slider_BP_set(v); }
+    if (elmnt === 'HighPass') { v = Math.trunc((33 + parseInt(value, 10)) /3); slider_HP_set(v); }
     if (elmnt === 'Balance')  slider_BAL_set(value)
 }
 
