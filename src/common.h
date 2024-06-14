@@ -1,5 +1,5 @@
 // created: 10.Feb.2022
-// updated: 06.Jun 2024
+// updated: 13.Jun 2024
 
 #pragma once
 #pragma GCC optimize("Os") // optimize for code size
@@ -227,7 +227,7 @@ bool           SD_newFolder(const char* folderPathName);
 bool           SD_delete(const char* itemPath);
 bool           preparePlaylistFromDLNAFolder();
 bool           preparePlaylistFromFile(const char* path);
-bool           preparePlaylistFromFolder(const char* path);
+bool           preparePlaylistFromSDFolder(const char* path);
 void           sortPlayListAlphabetical();
 void           sortPlayListRandom();
 void           processPlaylist(boolean first = false);
@@ -2895,6 +2895,7 @@ inline void GetRunTimeStats( char *pcWriteBuffer ){
             }
             free(tmpBuff);
         }
+           }
         // The array is no longer needed, free the memory it consumes.
         vPortFree( pxTaskStatusArray );
     }
