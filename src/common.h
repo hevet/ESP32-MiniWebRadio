@@ -2894,7 +2894,6 @@ inline void GetRunTimeStats( char *pcWriteBuffer ){
                 strcat(pcWriteBuffer, "\n");
             }
             free(tmpBuff);
-        }
            }
         // The array is no longer needed, free the memory it consumes.
         vPortFree( pxTaskStatusArray );
