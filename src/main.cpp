@@ -1592,8 +1592,8 @@ void setup() {
 
     strcpy(_myIP, WiFi.localIP().toString().c_str());
     SerialPrintfln("setup: ....  connected to " ANSI_ESC_CYAN "%s" ANSI_ESC_WHITE ", IP address is " ANSI_ESC_CYAN "%s", WiFi.SSID().c_str(), _myIP);
-    // ArduinoOTA.setHostname("MiniWebRadio");
-    // ArduinoOTA.begin();
+    ArduinoOTA.setHostname("MiniWebRadio");
+    ArduinoOTA.begin();
 
     ftpSrv.begin(SD_MMC, FTP_USERNAME, FTP_PASSWORD); // username, password for ftp.
 
