@@ -4,7 +4,7 @@
     MiniWebRadio -- Webradio receiver for ESP32
 
     first release on 03/2017                                                                                                      */String Version ="\
-    Version 3.2h Jun 22/2024                                                                                                                      ";
+    Version 3.2h Jun 28/2024                                                                                                                       ";
 
 /*  2.8" color display (320x240px) with controller ILI9341 or HX8347D (SPI) or
     3.5" color display (480x320px) with controller ILI9486 or ILI9488 (SPI)
@@ -741,7 +741,7 @@ inline uint8_t downBrightness() {
         _brightness -= 5;
         setTFTbrightness(_brightness);
         showBrightnessBar();
-        //    log_i("br %i", _brightness);
+    //    log_i("br %i", _brightness);
     }
     return _brightness;
 }
@@ -751,7 +751,7 @@ inline uint8_t upBrightness() {
         _brightness += 5;
         setTFTbrightness(_brightness);
         showBrightnessBar();
-        //    log_i("br %i", _brightness);
+    //    log_i("br %i", _brightness);
     }
     return _brightness;
 }
@@ -1592,8 +1592,8 @@ void setup() {
 
     strcpy(_myIP, WiFi.localIP().toString().c_str());
     SerialPrintfln("setup: ....  connected to " ANSI_ESC_CYAN "%s" ANSI_ESC_WHITE ", IP address is " ANSI_ESC_CYAN "%s", WiFi.SSID().c_str(), _myIP);
-    ArduinoOTA.setHostname("MiniWebRadio");
-    ArduinoOTA.begin();
+    // ArduinoOTA.setHostname("MiniWebRadio");
+    // ArduinoOTA.begin();
 
     ftpSrv.begin(SD_MMC, FTP_USERNAME, FTP_PASSWORD); // username, password for ftp.
 
@@ -2038,7 +2038,6 @@ void BTpowerChanged(int8_t newState){
 }
 
 void logAlarmItems() {
-void logAlarmItems() {
     const char wd[7][11] = {"Sunday:   ", "Monday:   ", "Tuesday:  ", "Wednesday:", "Thursday: ", "Friday:   ", "Saturday: "};
     uint8_t    mask = 0b00000001;
     for(uint8_t i = 0; i < 7; i++) {
@@ -2215,9 +2214,9 @@ void placingGraphicObjects() { // and initialize them
                                                                                          btn_BR_ready.setClickedPicturePath("/btn/Button_Ready_Yellow.jpg");
     pic_BR_logo.begin(    0,  _winName.y) ;                                              pic_BR_logo.setPicturePath("/common/Brightness.jpg");
     // EQUALIZER ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    sdr_EQ_lowPass.begin(  _sdrLP.x,  _sdrLP.y,  _sdrLP.w,  _sdrLP.h, -33, 12);          sdr_EQ_lowPass.setValue(_toneLP);
-    sdr_EQ_bandPass.begin( _sdrBP.x,  _sdrBP.y,  _sdrBP.w,  _sdrBP.h, -33, 12);          sdr_EQ_bandPass.setValue(_toneBP);
-    sdr_EQ_highPass.begin( _sdrHP.x,  _sdrHP.y,  _sdrHP.w,  _sdrHP.h, -33, 12);          sdr_EQ_highPass.setValue(_toneHP);
+    sdr_EQ_lowPass.begin(  _sdrLP.x,  _sdrLP.y,  _sdrLP.w,  _sdrLP.h, -33,  12);          sdr_EQ_lowPass.setValue(_toneLP);
+    sdr_EQ_bandPass.begin( _sdrBP.x,  _sdrBP.y,  _sdrBP.w,  _sdrBP.h, -33,  12);          sdr_EQ_bandPass.setValue(_toneBP);
+    sdr_EQ_highPass.begin( _sdrHP.x,  _sdrHP.y,  _sdrHP.w,  _sdrHP.h, -33,  12);          sdr_EQ_highPass.setValue(_toneHP);
     sdr_EQ_balance.begin( _sdrBAL.x, _sdrBAL.y, _sdrBAL.w, _sdrBAL.h, -16, 16);          sdr_EQ_balance.setValue(_toneBAL);
     txt_EQ_lowPass.begin(  _sdrLP.x +  _sdrLP.w + 2,  _sdrLP.y, 80, _sdrLP.h);           txt_EQ_lowPass.setFont(_fonts[2]);
     txt_EQ_bandPass.begin( _sdrBP.x +  _sdrBP.w + 2,  _sdrBP.y, 80, _sdrBP.h);           txt_EQ_bandPass.setFont(_fonts[2]);
@@ -3822,5 +3821,4 @@ void graphicObjects_OnRelease(const char* name, releasedArg ra) {
     }
     log_d("unused event: graphicObject %s was released", name);
 }
-// clang-format on
 // clang-format on
