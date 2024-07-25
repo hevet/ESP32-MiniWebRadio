@@ -21,7 +21,7 @@
 #define SDMMC_FREQUENCY     80000000                        // 80000000 or 40000000 MHz
 #define FTP_USERNAME        "esp32"                         // user and pw in FTP Client
 #define FTP_PASSWORD        "esp32"
-#define CONN_TIMEOUT        1000                             // unencrypted connection timeout in ms (http://...)
+#define CONN_TIMEOUT        1500                            // unencrypted connection timeout in ms (http://...)
 #define CONN_TIMEOUT_SSL    2500                            // encrypted connection timeout in ms (https://...)
 
 //————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
