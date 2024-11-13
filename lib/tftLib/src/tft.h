@@ -166,7 +166,7 @@ class TFT{
         SPISettings     TFT_SPI;                     // SPI settings for this slave
         SPIClass*       spi_TFT = NULL;             // use in class TP
 
-        uint8_t fontSizes[11] = {15, 16, 18, 21, 25, 27, 34, 38, 43, 56, 66};
+        uint8_t fontSizes[8] = {15, 16, 18, 21, 25, 27, 34, 38};
 
         typedef struct{
         	const uint8_t* glyph_bitmap;
