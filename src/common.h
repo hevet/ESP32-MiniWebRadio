@@ -7,14 +7,14 @@
 #define _SSID                   "mySSID"                        // Your WiFi credentials here
 #define _PW                     "myWiFiPassword"                // Or in textfile on SD-card
 #define DECODER                 1                               // (1)MAX98357A PCM5102A CS4344... (2)AC101, (3)ES8388
-#define TFT_CONTROLLER          5                               // (0)ILI9341, (1)HX8347D, (2)ILI9486a, (3)ILI9486b, (4)ILI9488, (5)ST7796, (6)ST7796RPI
+#define TFT_CONTROLLER          0                               // (0)ILI9341, (1)HX8347D, (2)ILI9486a, (3)ILI9486b, (4)ILI9488, (5)ST7796, (6)ST7796RPI
 #define DISPLAY_INVERSION       0                               // (0) off (1) on
-#define TFT_ROTATION            1                               // 1 or 3 (landscape)
+#define TFT_ROTATION            3                               // 1 or 3 (landscape)
 #define TFT_FREQUENCY           40000000                        // 80000000, 40000000, 27000000, 20000000, 10000000
-#define TP_VERSION              5                               // (0)ILI9341, (1)ILI9341RPI, (2)HX8347D, (3)ILI9486, (4)ILI9488, (5)ST7796, (3)ST7796RPI
-#define TP_ROTATION             1                               // 1 or 3 (landscape)
-#define TP_H_MIRROR             0                               // (0) default, (1) mirror up <-> down
-#define TP_V_MIRROR             0                               // (0) default, (1) mittor left <-> right
+#define TP_VERSION              0                               // (0)ILI9341, (1)ILI9341RPI, (2)HX8347D, (3)ILI9486, (4)ILI9488, (5)ST7796, (3)ST7796RPI
+#define TP_ROTATION             3                               // 1 or 3 (landscape)
+#define TP_H_MIRROR             1                               // (0) default, (1) mirror up <-> down
+#define TP_V_MIRROR             1                               // (0) default, (1) mittor left <-> right
 #define I2S_COMM_FMT            0                               // (0) MAX98357A PCM5102A CS4344, (1) LSBJ (Least Significant Bit Justified format) PT8211
 #define SDMMC_FREQUENCY         80000000                        // 80000000 or 40000000 Hz
 #define FTP_USERNAME            "esp32"                         // user and pw in FTP Client
@@ -109,7 +109,7 @@
 
         #define I2S_DOUT            9
         #define I2S_BCLK            3
-        #define I2S_LRC             1
+        #define I2S_LRC            46
         #define I2S_MCLK            0
 
         #define I2C_DAC_SDA        -1  // some DACs are controlled via I2C
