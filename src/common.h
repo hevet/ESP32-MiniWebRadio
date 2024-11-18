@@ -109,7 +109,7 @@
 
         #define I2S_DOUT            9
         #define I2S_BCLK            3
-        #define I2S_LRC             1
+        #define I2S_LRC            46
         #define I2S_MCLK            0
 
         #define I2C_DAC_SDA        -1  // some DACs are controlled via I2C
