@@ -16,7 +16,7 @@
 #define TP_H_MIRROR             1                               // (0) default, (1) mirror up <-> down
 #define TP_V_MIRROR             1                               // (0) default, (1) mittor left <-> right
 #define I2S_COMM_FMT            0                               // (0) MAX98357A PCM5102A CS4344, (1) LSBJ (Least Significant Bit Justified format) PT8211
-#define SDMMC_FREQUENCY         80000000                        // 80000000 or 40000000 Hz
+#define SDMMC_FREQUENCY         80000000                        // 80000000 or 40000000 MHz
 #define FTP_USERNAME            "esp32"                         // user and pw in FTP Client
 #define FTP_PASSWORD            "esp32"
 #define CONN_TIMEOUT            2500                            // unencrypted connection timeout in ms (http://...)
@@ -109,7 +109,7 @@
 
         #define I2S_DOUT            9
         #define I2S_BCLK            3
-        #define I2S_LRC            46
+        #define I2S_LRC             1
         #define I2S_MCLK            0
 
         #define I2C_DAC_SDA        -1  // some DACs are controlled via I2C
@@ -213,7 +213,7 @@ struct irButtons {
     char*   label;
 };
 typedef struct __settings{
-    irButtons irbuttons[35];
+    irButtons irbuttons[45];
     uint8_t numOfIrButtons = 0;
     char*   lastconnectedhost = NULL;
     char*   lastconnectedfile = NULL;
@@ -652,7 +652,7 @@ class IR_buttons {
 
     // Process each JSON object in the array
     char key[16];
-    while (*ptr && *ptr != ']' && buttonIndex < 33) {
+    while (*ptr && *ptr != ']' && buttonIndex < 43) {
         ptr = skipWhitespace(ptr);
         if (*ptr == '{') {
             ptr++;  // skip '{'
@@ -680,7 +680,7 @@ class IR_buttons {
                         ptr = skipWhitespace(ptr);
                         // Value based on key
                         if(key[0] =='A'){ // IR Address
-                            buttonNr = 32;
+                            buttonNr = 42;
                             char* str = NULL;
                             ptr = validateAndExtractString(ptr, &str);
                             if (!ptr) return false;  // error found
@@ -689,7 +689,7 @@ class IR_buttons {
                             validObject = true;
                         }
                         else if(key[0] == 'C'){; // IR command unused
-                            buttonNr = 33;
+                            buttonNr = 43;
                             char* str = NULL;
                             ptr = validateAndExtractString(ptr, &str);
                             if (!ptr) return false;  // error found
