@@ -4409,7 +4409,7 @@ void ir_short_key(uint8_t key) {
                         btn_EQ_balance.showClickedPic();
                         s_tone.BAL = 0;
                         txt_EQ_balance.writeText("0");
-                        sdr_EQ_balance.setValue(s_tone.LP);
+                        sdr_EQ_balance.setValue(s_tone.BAL);
                         webSrv.send("settone=", setI2STone().c_get());
                         btn_EQ_balance.showAlternativePic();
                     }
@@ -4425,7 +4425,7 @@ void ir_short_key(uint8_t key) {
                         btn_EQ_bandPass.showClickedPic();
                         s_tone.BP = 0;
                         txt_EQ_bandPass.writeText("0");
-                        sdr_EQ_bandPass.setValue(s_tone.LP);
+                        sdr_EQ_bandPass.setValue(s_tone.BP);
                         webSrv.send("settone=", setI2STone().c_get());
                         btn_EQ_bandPass.showAlternativePic();
                     }
@@ -4433,7 +4433,7 @@ void ir_short_key(uint8_t key) {
                         btn_EQ_highPass.showClickedPic();
                         s_tone.HP = 0;
                         txt_EQ_highPass.writeText("0");
-                        sdr_EQ_highPass.setValue(s_tone.LP);
+                        sdr_EQ_highPass.setValue(s_tone.HP);
                         webSrv.send("settone=", setI2STone().c_get());
                         btn_EQ_highPass.showAlternativePic();
                     }
