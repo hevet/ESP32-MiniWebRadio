@@ -2668,7 +2668,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">High:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="15" value="13" id="HighPass"
+                        <input type="range" min="0" max="32" step="1" value="16" id="HighPass"
                         onmouseup="slider_HP_mouseUp()"
                         ontouchend="slider_HP_mouseUp()"
                         oninput="slider_HP_change()">
@@ -2678,7 +2678,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">Band:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="15" value="13" id="BandPass"
+                        <input type="range" min="0" max="32" step="1" value="16" id="BandPass"
                         onmouseup="slider_BP_mouseUp()"
                         ontouchend="slider_BP_mouseUp()"
                         oninput="slider_BP_change()">
@@ -2688,7 +2688,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">Low:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="15" value="13" id="LowPass"
+                        <input type="range" min="0" max="32" step="1" value="16" id="LowPass"
                         onmouseup="slider_LP_mouseUp()"
                         ontouchend="slider_LP_mouseUp()"
                         oninput="slider_LP_change()">
