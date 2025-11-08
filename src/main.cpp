@@ -3346,7 +3346,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // balance
                     if (btnNr == 20) {
-                        if (s_tone.LP < 6) {
+                        if (s_tone.LP < 16) {
                             s_tone.LP++;
                             itoa(s_tone.LP, c, 10);
                             txt_EQ_lowPass.writeText(c);
@@ -3357,7 +3357,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // HP
                     if (btnNr == 30) {
-                        if (s_tone.BP < 6) {
+                        if (s_tone.BP < 16) {
                             s_tone.BP++;
                             itoa(s_tone.BP, c, 10);
                             txt_EQ_bandPass.writeText(c);
@@ -3368,7 +3368,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // BP
                     if (btnNr == 40) {
-                        if (s_tone.HP < 6) {
+                        if (s_tone.HP < 16) {
                             s_tone.HP++;
                             itoa(s_tone.HP, c, 10);
                             txt_EQ_highPass.writeText(c);
@@ -3650,7 +3650,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // balance
                     if (btnNr == 20) {
-                        if (s_tone.LP > -40) {
+                        if (s_tone.LP > -16) {
                             s_tone.LP--;
                             itoa(s_tone.LP, c, 10);
                             txt_EQ_lowPass.writeText(c);
@@ -3661,7 +3661,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // LP
                     if (btnNr == 30) {
-                        if (s_tone.BP > -40) {
+                        if (s_tone.BP > -16) {
                             s_tone.BP--;
                             itoa(s_tone.BP, c, 10);
                             txt_EQ_bandPass.writeText(c);
@@ -3672,7 +3672,7 @@ void ir_short_key(uint8_t key) {
                         return;
                     } // BP
                     if (btnNr == 40) {
-                        if (s_tone.HP > -40) {
+                        if (s_tone.HP > -16) {
                             s_tone.HP--;
                             itoa(s_tone.HP, c, 10);
                             txt_EQ_highPass.writeText(c);
