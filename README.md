@@ -45,7 +45,8 @@ Optional HW:
 Control is via the display touchscreen or a web page in a browser, no additional components such as switches, rotary encoders, capacitors or resistors are required.
 
 Schematic<br>SPI Display
-![Schematic ESP32-S3 with external DAC](docs/MWR_V4_SPI_Display_schematic.jpg)<br>
+![Schematic ESP32-S3 with external DAC](docs/MWR_S3_SPI_Display_schematic.jpg)<br>
+![Schematic ESP32-P4 with external DAC](docs/MWR_P4_SPI_Display_schematic.jpg)<br>
 <br>RGB Display
 ![Schematic ESP32-S3 with RGB Display](docs/MWR_V4_RGB_Display_schematic.jpg)<br>
 <br>
@@ -116,7 +117,7 @@ The values ​​of the PLCK frequency specified for RGB displays are not fully 
 On some PCM5102 boards the solder bridges are missing on the back.<br>
 ![PCM5102A Board](docs/PCM5102A.png)<br>
 This is how the DAC CS4344 is connected:<br>
-![CS4344 Board](docs/DAC_CS434.jpg)<br>
+![CS4344 Board](docs/DAC_CS4344.jpg)<br>
 If the DAC PT8211 is used, the *I2S_COMM_FMT* must be changed in common.h. This DAC requires Japanese LSBJ (Least Significant Bit Justified) format
 
 ### IR Receíver

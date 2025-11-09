@@ -9,7 +9,7 @@
     MiniWebRadio -- Webradio receiver for ESP32-S3
 
     first release on 03/2017                                                                                                      */char Version[] ="\
-    Version 4.0.4 - 02.11.2025                                                                                                               ";
+    Version 4.0.4b - 08.11.2025                                                                                                               ";
 
 /*  display (320x240px) with controller ILI9341 or
     display (480x320px) with controller ILI9486 or ILI9488 (SPI) or
@@ -676,25 +676,24 @@ void display_sleeptime(int8_t ud) { // set sleeptimer
             default: s_sleeptime = 0; break; // min
         }
     }
-    char tmp[10];
-    sprintf(tmp, "%d%02d", s_sleeptime / 60, s_sleeptime % 60);
-    char path[128] = "/digits_small/";
+    ps_ptr<char> tmp, path;
+    tmp.assignf("%d%02d", s_sleeptime / 60, s_sleeptime % 60);
 
     for (uint8_t i = 0; i < 4; i++) {
-        strcpy(path, "/digits_small/");
+        path = "/digits_small/";
         if (i == 3) {
             if (!s_sleeptime)
-                strcat(path, "dsgn.jpg");
+                path.append("dsgn.jpg");
             else
-                strcat(path, "dsrt.jpg");
+                path.append("dsrt.jpg");
         } else {
-            strncat(path, (tmp + i), 1);
+            path.append(tmp.get() + i, 1);
             if (!s_sleeptime)
-                strcat(path, "sgn.jpg");
+                path.append("sgn.jpg");
             else
-                strcat(path, "srt.jpg");
+                path.append("srt.jpg");
         }
-        drawImage(path, displayConfig.sleeptimeXPos[i], displayConfig.sleeptimeYPos);
+        drawImage(path.c_get(), displayConfig.sleeptimeXPos[i], displayConfig.sleeptimeYPos);
     }
 }
 
@@ -955,7 +954,7 @@ exit:
     return;
 }
 /*****************************************************************************************************************************************************
- *                                         C O N N E C T   TO   W I F I     /     A C C E S S P O I N T                                              *
+ *                                                        C O N N E C T   TO   W I F I                                                               *
  *****************************************************************************************************************************************************/
 bool connectToWiFi() {
 
@@ -1010,9 +1009,10 @@ bool connectToWiFi() {
     }
 
     // These options can help when you need ANY kind of wifi connection to get a config file, report errors, etc.
-    wifiMulti.setStrictMode(false); // Default is true.  Library will disconnect and forget currently connected AP if it's not in the AP list.
+    wifiMulti.setStrictMode(true); // Default is true.  Library will disconnect and forget currently connected AP if it's not in the AP list.
     SerialPrintfln("WiFI_info:   Connecting WiFi...");
 
+    WiFi.mode(WIFI_MODE_STA);
     wifiMulti.run();
 
     int i = 0;
@@ -1638,9 +1638,7 @@ void setStationViaURL(const char* url, const char* extension) {
 
 void savefile(ps_ptr<char> fileName, uint32_t contentLength, ps_ptr<char> contentType) { // save the uploadfile on SD_MMC
 
-    if (!fileName.starts_with("/")) {
-        fileName = "/" + fileName;
-    }
+    if (!fileName.starts_with("/")) { fileName = "/" + fileName; }
     if (webSrv.uploadfile(SD_MMC, fileName, contentLength, contentType)) {
         SerialPrintfln("save file:   " ANSI_ESC_CYAN "%s" ANSI_ESC_WHITE " in progress", fileName.c_get());
         webSrv.sendStatus(200);
@@ -2241,7 +2239,6 @@ void changeState(int32_t state) {
             txt_EQ_balance.show(true, false);
             if (s_equalizerSubMenue == 0) { btn_EQ_Radio.show(); }
             if (s_equalizerSubMenue == 1) { btn_EQ_Radio.showAlternativePic(); }
-
             break;
 
         case BLUETOOTH: {
@@ -2319,7 +2316,7 @@ void changeState(int32_t state) {
 
 ps_ptr<char> get_WiFi_PW(const char* ssid) {
     ps_ptr<char> line;
-    ps_ptr<char> password = "N/A";
+    ps_ptr<char> password = "";
 
     for (int j = 0; j < 6; j++) {
         if (j == 0) line = pref.getString("wifiStr0").c_str();

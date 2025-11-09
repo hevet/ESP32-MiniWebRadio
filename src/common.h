@@ -94,7 +94,7 @@
         #define SD_MMC_D3          42
         #define SD_MMC_CLK         43
         #define SD_MMC_CMD         44
-        #define IR_PIN             8  // IR Receiver (if available)
+        #define IR_PIN             32 // IR Receiver (if available)
         #define TFT_MOSI           20 // TFT and TP (FSPI)
         #define TFT_MISO           21 // TFT and TP (FSPI)
         #define TFT_SCK            22 // TFT and TP (FSPI)
@@ -254,7 +254,8 @@ extern SemaphoreHandle_t        mutex_rtc;
 extern RTIME                    rtc;
 extern WebSrv                   webSrv;
 extern std::deque<ps_ptr<char>> s_logBuffer;
-void                            SerialPrintfln(const char* fmt, ...) {
+
+void SerialPrintfln(const char* fmt, ...) {
     ps_ptr<char> myLog;
     if (newLine) {
         newLine = false;
@@ -535,7 +536,7 @@ inline int32_t indexOf(const char* haystack, const char* needle, int32_t startIn
     const char* p = haystack;
     for (; startIndex > 0; startIndex--)
         if (*p++ == '\0') return -1;
-    char* pos = strstr(p, needle);
+    const char* pos = strstr(p, needle);
     if (pos == nullptr) return -1;
     return pos - haystack;
 }
