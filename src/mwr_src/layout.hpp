@@ -139,7 +139,7 @@ constexpr coor txtBP = coor().pos(sdrHP.x + sdrHP.w, sdrBP.y).size(90, sdrBP.h);
 constexpr coor txtLP = coor().pos(sdrHP.x + sdrHP.w, sdrLP.y).size(90, sdrLP.h);
 constexpr coor txtBAL = coor().pos(sdrHP.x + sdrHP.w, sdrBAL.y).size(90, sdrBAL.h);
 
-inline constexpr uint8_t fonts[8] = {15, 16, 18, 21, 25, 27, 34, 38};
+inline constexpr uint8_t fonts[13] = {15, 16, 18, 21, 25, 27, 34, 38, 43, 56, 66, 81, 96};
 
 inline constexpr DisplayConfig config = {
     fonts,
