@@ -1054,7 +1054,7 @@ function showTab9 () {  // KCX BT Emitter
 function saveTextFileToSD (fileName, content) {
     var fd = new FormData()
     fd.append('Text=', content)
-    var theUrl = 'uploadfile?' + fileName + '&version=' + Math.random()
+    var theUrl = 'upload_text_file?' + fileName + '&version=' + Math.random()
     var xhr = new XMLHttpRequest()
     xhr.timeout = 2000; // time in milliseconds
     xhr.open('POST', theUrl, true)
@@ -3088,6 +3088,7 @@ function appendToTerminal(text) {
                             <select class="boxstyle" onchange="socket.send('set_timeSpeechLang=' + this.value)" id="timeSpeechLang" name="timeSpeechLang">
                                 <option value="fr">fr</option>
                                 <option value="en">en</option>
+                                <option value="ru">ru</option>
                             </select>
                         </h3>
                     </div>
