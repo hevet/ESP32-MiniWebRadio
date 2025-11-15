@@ -9,7 +9,7 @@
     MiniWebRadio -- Webradio receiver for ESP32-S3
 
     first release on 03/2017                                                                                                      */char Version[] ="\
-    Version 4.0.4f - 14.11.2025                                                                                                               ";
+    Version 4.0.4g - 15.11.2025                                                                                                               ";
 
 
 /*  display (320x240px) with controller ILI9341 or
@@ -76,6 +76,7 @@ ps_ptr<char> s_homepage = "";
 ps_ptr<char> s_TZName = "Europe/Berlin";
 ps_ptr<char> s_TZString = "CET-1CEST,M3.5.0,M10.5.0/3";
 ps_ptr<char> s_timeSpeechLang = "en";
+ps_ptr<char> s_lyrics = "";
 
 int8_t   s_currDLNAsrvNr = -1;
 uint8_t  s_alarmdays = 0;
@@ -147,6 +148,7 @@ bool s_f_newStreamTitle = false;
 bool s_f_webFailed = false;
 bool s_f_newBitRate = false;
 bool s_f_newStationName = false;
+bool s_f_newLyrics = false;
 bool s_f_volBarVisible = false;
 bool s_f_switchToClock = false;   // jump into CLOCK mode at the next opportunity
 bool s_f_timeAnnouncement = true; // time announcement every full hour
@@ -1529,12 +1531,14 @@ uint8_t upvolume() {
 }
 
 void setStation(uint16_t sta) {
+    static uint16_t old_cur_station = 0;
     if (sta == 0) { return; }
     if (sta > staMgnt.getSumStations()) sta = s_cur_station;
-
+    s_stationURL = staMgnt.getStationUrl(sta);
+    s_homepage = "";
     SerialPrintfln("action: ...  switch to station " ANSI_ESC_CYAN "%d", sta);
 
-    if (s_f_isWebConnected && sta == staMgnt.getCurrentStationNumber() && s_state == RADIO) { // Station is already selected
+    if (s_f_isWebConnected && sta == old_cur_station && s_state == RADIO) { // Station is already selected
         s_f_newStreamTitle = true;
     } else {
         if (s_state != RADIO) {
@@ -1543,14 +1547,12 @@ void setStation(uint16_t sta) {
         }
         s_streamTitle = "";
         s_icyDescription = "";
-        s_stationURL = staMgnt.getStationUrl(sta);
-        s_homepage = "";
         s_f_newStreamTitle = true;
         s_f_newIcyDescription = true;
         connecttohost(s_stationURL.c_get());
         //    if(!s_f_isWebConnected) s_cur_station = old_cur_station; // host is not connected
     }
-
+    old_cur_station = sta;
     StationsItems();
     if (s_state == RADIO) {
         showLogoAndStationName(true);
@@ -1562,6 +1564,7 @@ void setStation(uint16_t sta) {
     }
     dispFooter.updateStation(s_cur_station);
 }
+
 const char* getFlagPath(uint16_t station) {
     static char flagPath[40];
     flagPath[0] = '\0';
@@ -1687,6 +1690,7 @@ void SD_playFile(ps_ptr<char> pathWoFileName, const char* fileName) { // pathWit
 void SD_playFile(ps_ptr<char> path, uint32_t fileStartTime, bool showFN) {
     if (!path) return; // avoid a possible crash
     ps_ptr<char> audiopath = path;
+    ps_ptr<char> file_name ;
     if (audiopath.ends_with("m3u")) {
         if (SD_MMC.exists(path.c_get())) {
             preparePlaylistFromFile(path.c_get());
@@ -1701,13 +1705,14 @@ void SD_playFile(ps_ptr<char> path, uint32_t fileStartTime, bool showFN) {
     int32_t idx = path.last_index_of('/');
     if (idx < 0) return;
     s_cur_AudioFolder = audiopath.substr(0, idx);
+    file_name = audiopath.substr(idx + 1); // without '/'
 
     if (showFN) {
         clearLogo();
         showFileName(path.get() + idx + 1);
     }
 
-    SerialPrintfln("AUDIO_FILE:  " ANSI_ESC_MAGENTA "%s", path.get() + idx + 1);
+    SerialPrintfln("AUDIO_FILE:  " ANSI_ESC_MAGENTA "%s" ANSI_ESC_RESET, file_name.c_get());
     connecttoFS("SD_MMC", (const char*)path.c_get(), fileStartTime);
     if (s_f_playlistEnabled) showPlsFileNumber();
     if (s_f_isFSConnected) { s_settings.lastconnectedfile = path; }
@@ -2611,6 +2616,11 @@ void loop() {
             }
             webSrv.send("streamtitle=", s_streamTitle.c_get());
         }
+        if(s_f_newLyrics){
+            s_f_newLyrics = false;
+            if (s_state == RADIO) showStreamTitle(s_lyrics);
+            if (s_state == PLAYER) showFileName(s_lyrics.c_get());
+        }
         //------------------------------------------NEW ICY-DESCRIPTION-------------------------------------------------------------------------------
         if (s_f_newIcyDescription && !s_timeCounter.timer) {
             if (s_state == RADIO) {
@@ -2979,8 +2989,8 @@ void my_audio_info(Audio::msg_t m) {
 
         case Audio::evt_lyrics:
             SerialPrintfln("sync lyrics: " ANSI_ESC_CYAN "%s", m.msg);
-            if (s_state == RADIO) showStreamTitle(m.msg); // web file
-            if (s_state == PLAYER) showFileName(m.msg);
+            s_lyrics = m.msg;
+            s_f_newLyrics = true;
             break;
 
         case Audio::evt_log: SerialPrintfln("%s: .....  %s", m.s, m.msg); break;
