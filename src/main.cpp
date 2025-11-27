@@ -3336,8 +3336,8 @@ void ir_short_key(uint8_t key) {
             }
             if (s_state == BRIGHTNESS) {
                 if (s_brightnessSubMenue == 1) {
-                    s_brightness += 5;
-                    if (s_brightness > 249) s_brightness = 249;
+                    if (s_brightness + 5 > 255) s_brightness = 255;
+                    else s_brightness += 5;
                     sdr_BR_value.setValue(s_brightness);
                     setTimeCounter(2);
                 }
