@@ -2430,6 +2430,7 @@ void loop() {
                     f_tc = false;
                     dispFooter.updateTC(0);
                     if (s_f_sleeping) return; // tc is active by pressing a button, but do nothing if "off"
+                    if (s_f_brightnessIsChangeable) return;
 
                     if (s_state == RADIO) {
                         if (!txt_RA_staName.isEnabled()) { txt_RA_staName.show(true, false); } // assume volBox is shown
@@ -3336,7 +3337,7 @@ void ir_short_key(uint8_t key) {
             if (s_state == BRIGHTNESS) {
                 if (s_brightnessSubMenue == 1) {
                     s_brightness += 5;
-                    if (s_brightness > 100) s_brightness = 100;
+                    if (s_brightness > 249) s_brightness = 249;
                     sdr_BR_value.setValue(s_brightness);
                     setTimeCounter(2);
                 }
