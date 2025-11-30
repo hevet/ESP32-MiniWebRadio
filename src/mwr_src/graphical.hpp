@@ -4004,8 +4004,8 @@ class uniList {
         tft.writeText(m_buff, pos ? m_indentContent : m_indentDirectory, m_y + pos * m_lineHight, m_w - 10, m_lineHight, TFT_ALIGN_LEFT, TFT_ALIGN_CENTER, true, true);
     }
     void drawPosInfo(int16_t firstVal, int16_t secondVal, int16_t total, const char* color) { // e.g. 1-9/65
-        sprintf(m_buff, "%s%i-%i/%i", color, firstVal, secondVal, total);
-        tft.writeText(m_buff, 0, m_y, m_w, m_lineHight, TFT_ALIGN_RIGHT, TFT_ALIGN_CENTER, true, true);
+        sprintf(m_buff, "%s%i-%i-%i", color, firstVal, secondVal, total);
+        tft.writeText(m_buff, 0, m_y, m_w, m_lineHight, TFT_ALIGN_RIGHT, TFT_ALIGN_CENTER, true, true, false);
     }
     void colourLine(uint8_t pos, const char* color = ANSI_ESC_WHITE) {
         if (pos > 9) return;
@@ -4737,6 +4737,8 @@ class fileList : public RegisterTable {
             m_ra.val1 = 2; // isfolder
             m_ra.val2 = m_viewPos;
             m_ra.arg1 = m_curAudioFolder.get();
+            m_ra.arg2 = "";
+            m_ra.arg3 = "";
         }
         if (m_browseOnRelease == 5) {
             m_viewPos += m_fileListPos; // play file
@@ -4755,7 +4757,9 @@ class fileList : public RegisterTable {
         if (graphicObjects_OnRelease) graphicObjects_OnRelease(m_name, m_ra);
         x_ps_free(&fileName);
         m_ra.val1 = 0;
-        m_ra.arg1 = NULL;
+        m_ra.arg1 = "";
+        m_ra.arg2 = "";
+        m_ra.arg3 = "";
         return true;
     }
 
