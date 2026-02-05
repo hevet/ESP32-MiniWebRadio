@@ -455,13 +455,9 @@ const char index_html[] PROGMEM = R"=====(
 
 // global variables and functions
 /* eslint-disable no-unused-vars, no-undef */
-var I2S_eq_DB = [];
-var I2S_eq_Val = [];
+var I2S_eq_DB = ['-12', '-11', '-10', ' -9', ' -8', ' -7', ' -6', ' -5', ' -4', ' -3', ' -2', ' -1', '  0', ' +1', ' +2', ' +3', ' +4', ' +5', ' +6', ' +7', ' +8', ' +9', '+10', '+11', '+12']
 
-for (let i = -16; i <= 16; i++) {
-  I2S_eq_Val.push(i);
-  I2S_eq_DB.push((i >= 0 ? '+' : '') + i.toString());
-}
+var I2S_eq_Val = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 var tft_size = 0        // (0)320x240, (1)480x320, (2)800x480, (3)1024x600
 var ir_buttons
@@ -469,10 +465,10 @@ var ir_buttons
 
 // ---- websocket section------------------------
 
-var socket = null; // Globale Variable, um die Verbindung zu verfolgen
+var socket = null; // Global variable to track the connection
 var host = location.hostname
 var tm // Timeout-Variable für Ping/Pong
-var reconnectTimeout = null; // Timeout-Variable für die Wiederverbindungsversuche
+var reconnectTimeout = null; // Timeout variable for reconnection attempts
 let currentReconnectDelay = 1000; // Start delay for reconnect attempts (1 second)
 const maxReconnectDelay = 30000; // Maximum delay for reconnect attempts (30 seconds)
 let reconnectAttempts = 0; // Counter for reconnect attempts
@@ -487,10 +483,10 @@ var stationsLoaded = false
 
 
 function ping() {
-    if (socket && socket.readyState === WebSocket.OPEN) { // Sicherstellen, dass der Socket existiert und offen ist
+    if (socket && socket.readyState === WebSocket.OPEN) { // Make sure the socket exists and is open
         socket.send("ping");
         console.log("send ping");
-        // tm: Dieser Timeout sollte nur ausgelöst werden, wenn KEIN Pong zurückkommt.
+        // tm: This timeout should only be triggered if NO pong comes back.
         // Er sollte bei jedem empfangenen Pong gelöscht und neu gesetzt werden.
         // Das ist besser als ein fester 40s Timeout pro Ping.
         // Wenn der tm Timer läuft, ist es gut. Wenn er abläuft, bedeutet es, dass kein Pong kam.
@@ -1155,11 +1151,10 @@ function setstation () { // Radio: button play - Enter a streamURL here....
 
 function setSlider (elmnt, value) {
     console.log("setSlider", elmnt, value)
-    let v = 16 + parseInt(value, 10); // przesuwamy zakres [-16..16] -> [0..32]
-    if (elmnt === 'LowPass')  slider_LP_set(v);
-    if (elmnt === 'BandPass') slider_BP_set(v);
-    if (elmnt === 'HighPass') slider_HP_set(v);
-    if (elmnt === 'Balance')  slider_BAL_set(value);
+    if (elmnt === 'LowPass' ) { v = parseInt(value, 10) + 12; slider_LP_set(v); }
+    if (elmnt === 'BandPass') { v = parseInt(value, 10) + 12; slider_BP_set(v); }
+    if (elmnt === 'HighPass') { v = parseInt(value, 10) + 12; slider_HP_set(v); }
+    if (elmnt === 'Balance')  slider_BAL_set(value)
 }
 
 function slider_LP_mouseUp () { // Slider LowPass mouseupevent
@@ -2667,7 +2662,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">High:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="32" step="1" value="16" id="HighPass"
+                        <input type="range" min="0" max="21" value="12" id="HighPass"
                         onmouseup="slider_HP_mouseUp()"
                         ontouchend="slider_HP_mouseUp()"
                         oninput="slider_HP_change()">
@@ -2677,7 +2672,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">Band:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="32" step="1" value="16" id="BandPass"
+                        <input type="range" min="0" max="24" value="12" id="BandPass"
                         onmouseup="slider_BP_mouseUp()"
                         ontouchend="slider_BP_mouseUp()"
                         oninput="slider_BP_change()">
@@ -2687,7 +2682,7 @@ function appendToTerminal(text) {
 
                     <label class="sdr_lbl_left">Low:</label>
                     <div class="slidecontainer" style="float: left; width: 180px; height: 40px;">
-                        <input type="range" min="0" max="32" step="1" value="16" id="LowPass"
+                        <input type="range" min="0" max="21" value="12" id="LowPass"
                         onmouseup="slider_LP_mouseUp()"
                         ontouchend="slider_LP_mouseUp()"
                         oninput="slider_LP_change()">
