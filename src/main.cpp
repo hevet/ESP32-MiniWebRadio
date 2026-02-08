@@ -9,7 +9,7 @@
     MiniWebRadio -- Webradio receiver for ESP32-S3
 
     first release on 03/2017                                                                                                      */char Version[] ="\
-    Version 4.1.0c - Feb 06, 2026                                                                                                               ";
+    Version 4.1.0c3 - Feb 08, 2026                                                                                                               ";
 
 /*  display (320x240px) with controller ILI9341 or
     display (480x320px) with controller ILI9486, ILI9488 or ST7796 (SPI) or
@@ -1217,13 +1217,8 @@ void setup() {
             s_resetReason == ESP_RST_SW ||        // ESP.restart()
             s_resetReason == ESP_RST_SDIO ||      // The boot button was pressed
             s_resetReason == ESP_RST_DEEPSLEEP) { // Wake up
-            if (s_cur_station > 0) {
-                s_state = UNDEFINED;
-                setStation(s_cur_station);
-            } else {
-                s_state = UNDEFINED;
-                setStationViaURL(s_settings.lastconnectedhost.c_get(), "");
-            }
+            s_state = UNDEFINED;
+            setStation(s_cur_station);
         }
         if (!MDNS.begin("MiniWebRadio")) {
             SerialPrintfln("%s", "WiFI_info:   " ANSI_ESC_YELLOW "Error starting mDNS", ANSI_ESC_RESET);
@@ -1327,7 +1322,7 @@ uint8_t upvolume() {
 
 void setStation(uint16_t sta) {
     static uint16_t old_cur_station = 0;
-    if (sta == 0) { return; }
+    if (sta == 0) { setStationViaURL(s_settings.lastconnectedhost.c_get(), ""); }
     if (sta > staMgnt.getSumStations()) sta = s_cur_station;
     s_stationURL = staMgnt.getStationUrl(sta);
     SerialPrintfln("action: ...  switch to station " ANSI_ESC_CYAN "%d" ANSI_ESC_RESET "  ", sta);
@@ -1524,12 +1519,7 @@ void wake_up() {
     SerialPrintfln("awake");
     clearAll();
     setTFTbrightness(s_brightness);
-    if (s_cur_station) {
-        setStation(s_cur_station);
-    } else {
-        connecttohost(s_settings.lastconnectedhost.get());
-    }
-    changeState(RADIO, 0);
+    setStation(s_cur_station);
     showLogoAndStationName(true);
     dispHeader.show(true);
     dispHeader.speakerOnOff(!s_f_mute);
@@ -1625,6 +1615,7 @@ void setTimeCounter(uint8_t sec) {
         s_timeCounter.timer = 0;
         s_timeCounter.factor = 0;
         dispFooter.updateTC(0);
+        s_f_newBitRate = true;
     }
 }
 
@@ -1674,8 +1665,7 @@ void changeState(int8_t state, int8_t subState) {
                 dispFooter.updateFlag(getFlagPath(s_cur_station));
                 webSrv.send("changeState=", "RADIO");
                 if(!s_f_isWebConnected){
-                    if (s_cur_station) { setStation(s_cur_station); }
-                    else               { connecttohost(s_settings.lastconnectedhost.get()); }
+                    setStation(s_cur_station);
                 }
                 if(s_f_isWebConnected) showLogoAndStationName(true);
             }
@@ -2156,10 +2146,7 @@ void loop() {
         if (f_resume && s_f_eof) {
             f_resume = false;
             s_f_eof = false;
-            if (s_cur_station)
-                setStation(s_cur_station);
-            else
-                setStationViaURL(s_settings.lastconnectedhost.get(), "");
+            setStation(s_cur_station);
             return;
         }
         //------------------------------------------AUDIO_CURRENT_TIME - DURATION---------------------------------------------------------------------
@@ -2225,10 +2212,7 @@ void loop() {
         //------------------------------------------CONNECT TO LASTHOST-------------------------------------------------------------------------------
         if (s_f_connectToLastStation) { // not used yet
             s_f_connectToLastStation = false;
-            if (s_cur_station)
-                setStation(s_cur_station);
-            else
-                connecttohost(s_settings.lastconnectedhost.get());
+            setStation(s_cur_station);
         }
         //------------------------------------------RECONNECT AFTER FAIL------------------------------------------------------------------------------
         if (s_f_reconnect && !s_f_isWiFiConnected) { // not used yet
@@ -2523,9 +2507,9 @@ void my_audio_info(Audio::msg_t m) {
 
         case Audio::evt_lasthost:
             if (s_f_playlistEnabled) return;
-            s_settings.lastconnectedhost.assign(m.msg);
-            SerialPrintflnCut("lastURL: ..  ", ANSI_ESC_WHITE, s_settings.lastconnectedhost.get());
-            webSrv.send("stationURL=", s_settings.lastconnectedhost.get());
+            if(s_state == RADIO) s_settings.lastconnectedhost.assign(m.msg);
+            SerialPrintflnCut("lastURL: ..  ", ANSI_ESC_WHITE, m.msg);
+            webSrv.send("stationURL=", m.msg);
             break;
 
         case Audio::evt_icyurl:
@@ -2650,7 +2634,7 @@ void ir_number(uint16_t num) {
 
 void ir_released(int8_t key) {
     SerialPrintfln("ir_code: ..  " ANSI_ESC_YELLOW "released ir key nr: " ANSI_ESC_BLUE "%02i, <%s>" ANSI_ESC_RESET "  ", key, ir_symbols[key]);
-    // tp_released(0, 0);
+    tp_released(0, 0);
     return;
 }
 // ————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -3653,6 +3637,7 @@ void on_websrv(const WebSrv::msg_s& msg) {
         SerialPrintfln("WebSrv Info: " ANSI_ESC_GREEN "%s " ANSI_ESC_RESET "  ", msg.arg.c_get());
     }
     if (msg.e == WebSrv::evt_error) { SerialPrintfln("WebSrv Err:  " ANSI_ESC_RED "%s" ANSI_ESC_RESET "  ", msg.arg.c_get()); }
+    if (msg.e == WebSrv::evt_warn) { SerialPrintfln("WebSrv Warn:  " ANSI_ESC_YELLOW "%s" ANSI_ESC_RESET "  ", msg.arg.c_get()); }
     if (msg.e == WebSrv::evt_command) { WEBSRV_onCommand(msg.cmd, msg.param1, msg.arg1); }
 }
 // —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -4008,7 +3993,7 @@ void graphicObjects_OnRelease(ps_ptr<char> name, releasedArg ra) {
                                                   playlist.sort_random(); s_subState_player = 1; s_f_playlistEnabled = true; }
                                               goto exit; }
         if (name.equals("btn_PL_fileList")) { s_SD_content.listFilesInDir(s_cur_AudioFolder.c_get(), true, false); changeState(AUDIOFILESLIST, 0); goto exit; }
-        if (name.equals("btn_PL_radio"))    { changeState(RADIO, 0); setStation(s_cur_station); goto exit; }
+        if (name.equals("btn_PL_radio"))    { setStation(s_cur_station); goto exit; }
         if (name.equals("btn_PL_off"))      { fall_asleep(); goto exit; }
         if (name.equals("sdr_PL_volume"))   { goto exit; }
         if (name.equals("btn_PL_playNext")) { SD_playFile(s_cur_AudioFolder.c_get(), s_SD_content.getColouredSStringByIndex(s_cur_AudioFileNr)); showAudioFileNumber(); goto exit; }
@@ -4042,7 +4027,7 @@ void graphicObjects_OnRelease(ps_ptr<char> name, releasedArg ra) {
                                               if(s_ir_btn_select == 3) set_ir_pos_DL(0);
                                               goto exit; }
         if (name.equals("btn_DL_fileList")) { changeState(DLNAITEMSLIST, 0); txt_DL_fName.setText(""); goto exit; }
-        if (name.equals("btn_DL_radio"))    { changeState(RADIO, 0); setStation(s_cur_station); goto exit; }
+        if (name.equals("btn_DL_radio"))    { setStation(s_cur_station); goto exit; }
         if (name.equals("sdr_DL_volume"))   { goto exit; }
         if (name.equals("pgb_DL_progress")) { audio.setTimeOffset(ra.val2); goto exit; }
     }
