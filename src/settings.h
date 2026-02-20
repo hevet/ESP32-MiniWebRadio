@@ -1,17 +1,17 @@
 #pragma once
 #include "tft_structures.h"
 
-#define _SSID             "mySSID"         // Your WiFi credentials here
-#define _PW               "myWiFiPassword" // Or in textfile on SD-card
-#define TFT_CONTROLLER    0                // (0)ILI9341[320x240], (3)ILI9486[480x320], (4)ILI9488[480x320], (5)ST7796[480x320], (7)RGB display[800x480], (8)DSI display[1024x600]
+#define _SSID             "Wolles-FRITZBOX"         // Your WiFi credentials here
+#define _PW               "40441061073895958449" // Or in textfile on SD-card
+#define TFT_CONTROLLER    9                // (0)SPI-ILI9341[320x240], (3)SPI-ILI9486[480x320], (4)SPI-ILI9488[480x320], (5)SPI-ST7796[480x320], (7)RGB[800x480], (8)DSI-EK97001[1024x600], (9)DSI-JD9165[1024x600]
 #define DISPLAY_INVERSION 0                // only SPI displays, (0) off (1) on
-#define TFT_ROTATION      3                // only SPI displays, 1 or 3 (landscape)
+#define TFT_ROTATION      1                // only SPI displays, 1 or 3 (landscape)
 #define TFT_FREQUENCY     40000000         // only SPI displays, 80000000, 40000000, 27000000, 20000000, 10000000
-#define TP_CONTROLLER     0                // (0)ILI9341, (3)ILI9486, (4)ILI9488, (5)ST7796, (7)GT911, (8)FT6x63
-#define TP_ROTATION       3                // 1 or 3 (landscape)
-#define TP_H_MIRROR       1                // (0) default, (1) mirror up <-> down
-#define TP_V_MIRROR       1                // (0) default, (1) mirror left <-> right
-#define LIGHT_SENSOR      0                // (0) none, (1) BH1750
+#define TP_CONTROLLER     7                // (0)ILI9341, (3)ILI9486, (4)ILI9488, (5)ST7796, (7)GT911, (8)FT6x63
+#define TP_ROTATION       1                // 1 or 3 (landscape)
+#define TP_H_MIRROR       0                // (0) default, (1) mirror up <-> down
+#define TP_V_MIRROR       0                // (0) default, (1) mirror left <-> right
+#define LIGHT_SENSOR      1                // (0) none, (1) BH1750
 #define I2S_COMM_FMT      0                // (0) MAX98357A PCM5102A CS4344, (1) LSBJ (Least Significant Bit Justified format) PT8211
 #define SDMMC_FREQUENCY   80000000         // 80000000 or 40000000 Hz
 #define FTP_USERNAME      "esp32"          // user name in FTP Client
@@ -264,13 +264,14 @@ const Timing RGB_TIMING = {.h_res = 800,
 
 const Timing DSI_TIMING = {.h_res = 1024,
                            .v_res = 600,
-                           .pixel_clock_hz = 52000000,
+                           .pixel_clock_mhz = 52,
                            .hsync_pulse_width = 10,
                            .hsync_back_porch = 160,
                            .hsync_front_porch = 160,
                            .vsync_pulse_width = 1,
                            .vsync_back_porch = 23,
-                           .vsync_front_porch = 22};
+                           .vsync_front_porch = 22,
+                           .lane_bit_rate_mbps = 900};
 
         #define TP_IRQ -1
 
@@ -296,8 +297,57 @@ const Timing DSI_TIMING = {.h_res = 1024,
         #define BT_EMITTER_CONNECT 34
 
         #define LCD_RESET   33
-        #define TFT_BL      32 // same as RGB_PINS.bl
+        #define TFT_BL      32 //
         #define AMP_ENABLED -1 // control pin for extenal amplifier (if available)
+
+        #define I2C_SDA 7 // I2C dala line for capacitive touchpad
+        #define I2C_SCL 8 // I2C clock line for capacitive touchpad
+    #endif
+#endif
+
+// —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+// 📌📌📌  DSI-DISPLAY [1024x600] ESP32-P4 GUITION 7"   📌📌📌 JC1060P470
+// —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+#if 1                       // 0 deactivated, 1 activated
+    #if TFT_CONTROLLER == 9 // RGB display
+
+const Timing DSI_TIMING = {.h_res = 1024,
+                           .v_res = 600,
+                           .pixel_clock_mhz = 52,
+                           .hsync_pulse_width = 40,
+                           .hsync_back_porch = 160,
+                           .hsync_front_porch = 160,
+                           .vsync_pulse_width = 10,
+                           .vsync_back_porch = 23,
+                           .vsync_front_porch = 12,
+                           .lane_bit_rate_mbps = 750};
+
+        #define TP_IRQ -1
+
+        #define SD_MMC_D0  39
+        #define SD_MMC_D1  40
+        #define SD_MMC_D2  41
+        #define SD_MMC_D3  42
+        #define SD_MMC_CLK 43
+        #define SD_MMC_CMD 44
+
+        #define GT911_I2C_ADDRESS 0x5D // default I2C-address of GT911
+
+        #define I2S_DOUT 2
+        #define I2S_BCLK 3
+        #define I2S_LRC  4
+        #define I2S_MCLK -1 // important, don't change!
+
+        #define IR_PIN             5  // IR Receiver (if available)
+        #define BT_EMITTER_RX      28
+        #define BT_EMITTER_TX      29
+        #define BT_EMITTER_LINK    30
+        #define BT_EMITTER_MODE    31
+        #define BT_EMITTER_CONNECT 34
+
+        #define LCD_RESET   27 //
+        #define TFT_BL      23 //
+        #define AMP_ENABLED -1 //control pin for extenal amplifier (if available)
 
         #define I2C_SDA 7 // I2C dala line for capacitive touchpad
         #define I2C_SCL 8 // I2C clock line for capacitive touchpad
